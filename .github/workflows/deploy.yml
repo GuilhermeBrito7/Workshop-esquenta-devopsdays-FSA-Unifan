@@ -25,24 +25,24 @@ jobs:
           tags: |
             ${{ secrets.DOCKERHUB_USERNAME }}/devopsdays:latest
             ${{ secrets.DOCKERHUB_USERNAME }}/devopsdays:${{ github.sha }}
-  deploy:
-    name: Deploy to EC2
-    runs-on: ubuntu-24.04
-    needs: build
-    if: github.ref == 'refs/heads/main'
-    steps:
-      - name: Deploy via SSH
-        uses: appleboy/ssh-action@v1.0.3
-        with:
-          host: ${{ secrets.EC2_HOST }}
-          username: ${{ secrets.EC2_USER }}
-          key: ${{ secrets.EC2_SSH_KEY }}
-          script: |
-            docker pull ${{ secrets.DOCKERHUB_USERNAME }}/devopsdays:latest
-            docker stop devopsdays || true
-            docker rm devopsdays || true
-            docker run -d \
-              --name devopsdays \
-              -p 8080:80 \
-              --restart unless-stopped \
-              ${{ secrets.DOCKERHUB_USERNAME }}/devopsdays:latest
+#  deploy:
+#    name: Deploy to EC2
+#    runs-on: ubuntu-24.04
+#    needs: build
+#    if: github.ref == 'refs/heads/main'
+#    steps:
+#      - name: Deploy via SSH
+#        uses: appleboy/ssh-action@v1.0.3
+#        with:
+#          host: ${{ secrets.EC2_HOST }}
+#          username: ${{ secrets.EC2_USER }}
+#          key: ${{ secrets.EC2_SSH_KEY }}
+#          script: |
+#            docker pull ${{ secrets.DOCKERHUB_USERNAME }}/devopsdays:latest
+#            docker stop devopsdays || true
+#            docker rm devopsdays || true
+#            docker run -d \
+#              --name devopsdays \
+#              -p 8080:80 \
+#              --restart unless-stopped \
+#              ${{ secrets.DOCKERHUB_USERNAME }}/devopsdays:latest
